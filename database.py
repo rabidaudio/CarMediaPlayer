@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-## This is the database manager
-
 from pysqlite2 import dbapi2 as sqlite
 import os, shutil, time, sys, re
 from tagger import *
@@ -9,6 +7,7 @@ from tagger import *
 from lumberjack import dbg
 
 class cmpDB:
+## This is the database manager
 	def __init__(self,library_dir):
 		self.connection = sqlite.connect('cmp.db')
 		self.cursor = self.connection.cursor()
@@ -20,7 +19,15 @@ class cmpDB:
 		self.ilog=self.mydbg.info
 		self.elog=self.mydbg.error
 		self.wlog=self.mydbg.warn
-		#self.check_for_changes
+		self.check_for_changes
+
+		#add the library table if it doesn't exist
+		self.cursor.execute('SELECT name FROM sqlite_master WHERE type=\'table\'')
+		result=self.cursor.fetchall()
+		if not ('library',) in result:
+			self.wlog('library table missing. Creating...')
+			self.cursor.execute(self.library_create)
+			self.connection.commit()
 	
 	#def initalize_config(self):
 	#	try:
@@ -35,18 +42,16 @@ class cmpDB:
 	#	compare to all files in root directory (except lib).
 	#	if different, call update_library
 		self.ilog("looking for new tracks...")
+
 		#get all current files
 		filesongs=[]
-		acceptable_filetypes = ".mp3"#TODO replace with config file
+		acceptable_filetypes = [".mp3"] #TODO replace with config file
 		for root, dirs, files in os.walk(source_dir):
 			for f in files:
 				source = root+"/"+f
 				extension = os.path.splitext(source)[1].lower()
 				if extension in acceptable_filetypes:
 					filesongs.append(str(os.path.getmtime(source))+"|"+source)
-				else:
-					print "skipping "+f
-		print filesongs
 
 		#get database's (old) files
 		dbsongs=[]
@@ -60,31 +65,20 @@ class cmpDB:
 		#dbsongs.sort()
 		missing_from_db=list(set(filesongs).difference(set(dbsongs)))
 		missing_from_files=list(set(dbsongs).difference(set(filesongs)))
-		print missing_from_db
-		print missing_from_files
 		for m in missing_from_db:
-			print re.split('\|',m,1)[1]
 			self.add_to_library(re.split('\|',m,1)[1])
-	#>>> old.sort()
-	#>>> new.sort()
-	#>>> print set(old) & set(new)
-	#set(['1/a.mp3_12/14'])
-	#>>> set(new).difference(set(old))
-	#set(['2/a.mp3_12/15'])
-	#>>> list(set(new).difference(set(old)))
-	#['2/a.mp3_12/15']
+		for m in missing_from_files:
+			self.remove_from_library(re.split('\|',m,1)[1])
+		#waiting to push the changes until now means we can be sure there
+		#	aren't any crashes that fuck our database.
+		self.connection.commit()
 
-
-	#GET TABLES: SELECT name, sql FROM sqlite_master WHERE type='table' ;
 
 	def add_to_library(self,songfile):
 		mytagger = tagger()
 		tags = mytagger.get_track_info(songfile)
 		self.ilog("adding "+songfile)
 		self.cursor.execute(self.library_insert, ( songfile, tags['tracknum'], tags["title"], tags["artist"], tags["album"], tags['year'], str(os.path.getmtime(songfile)) ) )
-		#self.cursor.execute('SELECT * FROM library GROUP BY artist ORDER BY artist')
-		#results=self.cursor.fetchall()
-		#print results
 
 	def remove_from_library(self,songfile):
 		self.wlog("track "+songfile+" is missing. removing from database")
@@ -92,12 +86,10 @@ class cmpDB:
 
 
 	def get_artists(self):
-		print "Get artists called"
 		artists = []
 		self.cursor.execute('SELECT artist FROM library GROUP BY artist ORDER BY artist')
 		results = self.cursor.fetchall()
 		for a in results:
-			print a[0]
 			artists.append(a[0])
 		return artists
 
