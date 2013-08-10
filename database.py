@@ -2,7 +2,7 @@
 
 from pysqlite2 import dbapi2 as sqlite
 import os, shutil, time, sys, re
-from tagger import *
+from tagger import tagger
 
 from lumberjack import dbg
 
@@ -19,7 +19,6 @@ class cmpDB:
 		self.ilog=self.mydbg.info
 		self.elog=self.mydbg.error
 		self.wlog=self.mydbg.warn
-		self.check_for_changes
 
 		#add the library table if it doesn't exist
 		self.cursor.execute('SELECT name FROM sqlite_master WHERE type=\'table\'')
@@ -28,6 +27,7 @@ class cmpDB:
 			self.wlog('library table missing. Creating...')
 			self.cursor.execute(self.library_create)
 			self.connection.commit()
+		self.check_for_changes('.')
 	
 	#def initalize_config(self):
 	#	try:
@@ -36,6 +36,12 @@ class cmpDB:
 	#	except: #create a config database
 	#		self.config = {'
 	#		self.cursor.execute
+	# Larger example that inserts many records at a time
+	#purchases = [('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+	#             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+	#             ('2006-04-06', 'SELL', 'IBM', 500, 53.00),
+	#            ]
+	#c.executemany('INSERT INTO stocks VALUES (?,?,?,?,?)', purchases)
 
 	def check_for_changes(self,source_dir='.'):
 	#check database for list of files and last modified date,
@@ -82,7 +88,7 @@ class cmpDB:
 
 	def remove_from_library(self,songfile):
 		self.wlog("track "+songfile+" is missing. removing from database")
-		self.cursor.execute('DELETE FROM library WHERE file ="'+songfile+'"')
+		self.cursor.execute('DELETE FROM library WHERE file =?',(songfile,))
 
 
 	def get_artists(self):
@@ -99,13 +105,23 @@ class cmpDB:
 		if artist == '':
 			self.cursor.execute('SELECT album FROM library GROUP BY album ORDER BY album')
 		else:
-			self.cursor.execute('SELECT album FROM library WHERE artist="'+artist+'" GROUP BY album ORDER BY year, album')
+			self.cursor.execute('SELECT album FROM library WHERE artist=? GROUP BY album ORDER BY year, album',(artist,))
 		results = self.cursor.fetchall()
 		for a in results:
 			albums.append(a[0])
 		return albums
 	
-	#def get_tracks(self, artist='', album=''):
-	#	tracks=[]
-	#	if artist=='' and album=='':
-	#		self.cursor.execute('SELECT track ')
+	def get_tracks(self, album='', artist=''):
+		tracks=[]
+		if artist=='' and album=='':
+			self.cursor.execute('SELECT title FROM library ORDER BY title')
+		elif artist=='':
+			self.cursor.execute('SELECT title FROM library WHERE album=? ORDER BY title', (album,))
+		elif album=='':
+			self.cursor.execute('SELECT title FROM library WHERE artist=? ORDER BY title', (artist,))
+		else:
+			self.cursor.execute('SELECT title FROM library WHERE artist=? AND album=? ORDER BY title'(artist, album))
+		results = self.cursor.fetchall()
+		for a in results:
+			tracks.append(a[0])
+		return tracks
