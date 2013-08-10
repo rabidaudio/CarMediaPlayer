@@ -5,7 +5,7 @@ from database import cmpLibrary, cmpConfig
 import database
 from lumberjack import dbg
 from player import cmpPlayer
-import time
+import time, os
 
 mydbg=dbg('info')
 ilog=mydbg.info
@@ -14,11 +14,13 @@ wlog=mydbg.warn
 
 #playqueue probably doesnt need to be a class. it can be a set of tracks (or just ids)
 
+print os.getcwd()
 
 library_dir = "lib"
 source_dir = "Test/new"
 
 cmpdb = cmpLibrary(library_dir)
+cmpdb.refresh_library()
 cmpconfig = cmpConfig()
 print cmpconfig.settings
 

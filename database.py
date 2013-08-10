@@ -30,9 +30,9 @@ class cmpLibrary(cmpDB):
 			self.wlog('library table missing. Creating...')
 			self.cursor.execute(self.library_create)
 			self.connection.commit()
-		self.check_for_changes('.')
+		self.check_for_changes()
 
-	def check_for_changes(self,source_dir='.'):
+	def check_for_changes(self,source_dir=os.getcwd()):
 	#check database for list of files and last modified date,
 	#	compare to all files in root directory (except lib).
 	#	if different, call update_library
@@ -68,6 +68,10 @@ class cmpLibrary(cmpDB):
 		#	aren't any crashes that fuck our database.
 		self.connection.commit()
 
+	def refresh_library(self):
+		self.cursor.execute('DROP TABLE library')
+		self.cursor.execute(self.library_create)
+		self.check_for_changes()#will do the commit
 
 	def add_to_library(self,songfile):
 		mytagger = tagger()
@@ -136,5 +140,9 @@ class cmpConfig(cmpDB):
 		self.cursor.execute('CREATE TABLE config (setting VARCHAR(50), value VARCHAR(50))')
 		self.cursor.executemany('INSERT INTO config VALUES (?,?)', default_config)
 		self.connection.commit()
+
+	def clear_config(self):
+		self.cursor.execute('DROP TABLE config')
+		self.initalize_config() #will do the commit
 
 	#def set_config(self,setting, value):
