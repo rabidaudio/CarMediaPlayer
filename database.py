@@ -153,4 +153,7 @@ class cmpConfig(cmpDB):
 		self.cursor.execute('DROP TABLE config')
 		self.initalize_config() #will do the commit
 
-	#def set_config(self,setting, value):
+	def set_config(self,setting, value):
+		self.cursor.execute('UPDATE config SET value=? WHERE setting=?',(value,setting))
+		self.connection.commit()
+		self.extract_settings()#gotta update after
