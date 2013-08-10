@@ -1,0 +1,8 @@
+
+#removing directories
+lib/
+Test/
+sqlitebrowser/
+
+#remove compiled verisons
+*.pyc
