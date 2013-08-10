@@ -9,7 +9,6 @@ class cmpPlayer:
 # basically copied directly from the playbin tutorial. this is lazy, and
 # probably means it runs slower than neccessary, but it was stupid easy
 
-#TODO replace file with id lookup
 	def __init__(self):
 		self.player = gst.element_factory_make("playbin2", "player")
 		fakesink = gst.element_factory_make("fakesink", "fakesink")

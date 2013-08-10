@@ -1,5 +1,7 @@
 #!/usr/bin/var
 
+from collections import deque
+
 class cmpInput:
 #creates an input command queue
 #commands come in as numbers, but are stored in the queue as names
@@ -13,17 +15,20 @@ class cmpInput:
 
 	def __init__(self):
 		self.buttons=['play_pause','next','perv','menu','mode','shuffle_all']
-		self.q=Queue()
+		self.q=deque()
 
 	def add(self, command):
-		self.q.put(self.buttons[command])
-	def getnext(self):
-		return self.q.get()
+		self.q.appendleft(self.buttons[command])
+	def get(self):
+		try:
+			r=self.q.pop()
+		except:
+			r=0
+		return r
 	def getall(self):
 		out=[]
-		while self.q.full():
-			out.append(self.q.get())
+		while len(self.q)>0:
+			out.append(self.q.pop())
 		return out
 	def clear(self):
-		out=self.getall()
-		#then don't return it
+		q.clear()

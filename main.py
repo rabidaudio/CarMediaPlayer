@@ -5,7 +5,9 @@ from database import cmpLibrary, cmpConfig
 import database
 from lumberjack import dbg
 from player import cmpPlayer
+
 import time, os
+from input import cmpInput
 
 mydbg=dbg('info')
 ilog=mydbg.info
@@ -31,8 +33,18 @@ def play(song_id):
 		myplayer.start(filepath)
 		while myplayer.playmode:
 			time.sleep(1)
+	else:
+		elog('No such song!')
 
-play(5)
+inp=cmpInput()
+inp.add(0)
+inp.add(1)
+inp.add(3)
+print inp.get()
+print inp.get()
+print inp.get()
+print inp.get()
+
 #for a in cmpdb.get_albums('Nekromantix'):
 #	print a
 #	for t in cmpdb.get_tracks(a):
