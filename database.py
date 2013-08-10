@@ -8,17 +8,20 @@ from lumberjack import dbg
 
 class cmpDB:
 ## This is the database manager
+	connection = sqlite.connect('cmp.db')
+	cursor = connection.cursor()
+
+	mydbg=dbg('info')
+	ilog=mydbg.info
+	elog=mydbg.error
+	wlog=mydbg.warn
+
+
+class cmpLibrary(cmpDB):
 	def __init__(self,library_dir):
-		self.connection = sqlite.connect('cmp.db')
-		self.cursor = self.connection.cursor()
 		self.library_create = 'CREATE TABLE library (song_id INTEGER PRIMARY KEY, file VARCHAR(255), tracknum INT(8), title VARCHAR(255), artist VARCHAR(255), album VARCHAR(255), year INT(16), modified VARCHAR(20))'
 		self.library_insert = 'INSERT INTO library VALUES (null, ?, ?, ?, ?, ?, ?, ?)'
 		self.library_dir = library_dir
-
-		self.mydbg=dbg('info')
-		self.ilog=self.mydbg.info
-		self.elog=self.mydbg.error
-		self.wlog=self.mydbg.warn
 
 		#add the library table if it doesn't exist
 		self.cursor.execute('SELECT name FROM sqlite_master WHERE type=\'table\'')
@@ -28,20 +31,6 @@ class cmpDB:
 			self.cursor.execute(self.library_create)
 			self.connection.commit()
 		self.check_for_changes('.')
-	
-	#def initalize_config(self):
-	#	try:
-	#		self.cursor.execute('SELECT * FROM config')
-	#		self.config = self.cursor.fetchall()
-	#	except: #create a config database
-	#		self.config = {'
-	#		self.cursor.execute
-	# Larger example that inserts many records at a time
-	#purchases = [('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-	#             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-	#             ('2006-04-06', 'SELL', 'IBM', 500, 53.00),
-	#            ]
-	#c.executemany('INSERT INTO stocks VALUES (?,?,?,?,?)', purchases)
 
 	def check_for_changes(self,source_dir='.'):
 	#check database for list of files and last modified date,
@@ -125,3 +114,27 @@ class cmpDB:
 		for a in results:
 			tracks.append(a[0])
 		return tracks
+
+
+class cmpConfig(cmpDB):
+	def __init__(self):
+		self.cursor.execute('SELECT name FROM sqlite_master WHERE type=\'table\'')
+		result=self.cursor.fetchall()
+		if not ('config',) in result:
+			self.wlog('config table missing. Creating...')
+			self.initalize_config()
+		self.extract_settings()
+		
+	def extract_settings(self):
+		self.cursor.execute('SELECT setting, value FROM config')
+		self.settings=self.cursor.fetchall()
+		
+	def initalize_config(self):
+		default_config=[('scrobble','True'),
+				('acceptable_filetypes','[".mp3"]'),
+				]
+		self.cursor.execute('CREATE TABLE config (setting VARCHAR(50), value VARCHAR(50))')
+		self.cursor.executemany('INSERT INTO config VALUES (?,?)', default_config)
+		self.connection.commit()
+
+	#def set_config(self,setting, value):
