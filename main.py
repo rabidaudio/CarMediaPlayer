@@ -20,16 +20,22 @@ library_dir = "lib"
 source_dir = "Test/new"
 
 cmpdb = cmpLibrary(library_dir)
-cmpdb.refresh_library()
 cmpconfig = cmpConfig()
 print cmpconfig.settings
 
+myplayer = cmpPlayer()
+
+def play(song_id):
+	filepath=cmpdb.get_file(song_id)
+	if filepath != -1:
+		myplayer.start(filepath)
+		while myplayer.playmode:
+			time.sleep(1)
+
+play(5)
 #for a in cmpdb.get_albums('Nekromantix'):
 #	print a
 #	for t in cmpdb.get_tracks(a):
 #		print a+'--'+t
 
-#myplayer = cmpPlayer()
 #myplayer.start('/home/charles/Dropbox/Projects/CarMediaPlayer/Test/new/jmu/ZMOO.mp3')
-#while myplayer.playmode:
-#	time.sleep(1)

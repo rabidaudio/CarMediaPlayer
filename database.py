@@ -139,7 +139,7 @@ class cmpConfig(cmpDB):
 		
 	def extract_settings(self):
 		self.cursor.execute('SELECT setting, value FROM config')
-		self.settings=self.cursor.fetchall()
+		self.settings=dict(self.cursor.fetchall())
 		
 	def initalize_config(self):
 		default_config=[('scrobble','True'),
