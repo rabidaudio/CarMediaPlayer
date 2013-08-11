@@ -4,17 +4,18 @@ from pysqlite2 import dbapi2 as sqlite
 import os, shutil, time, sys, re
 from tagger import tagger
 
-from lumberjack import dbg
+import CMP
+#from lumberjack import dbg
 
 class DB:
 ## This is the database manager
-	connection = sqlite.connect('../cmp.db')
+	connection = sqlite.connect('cmp.db')
 	cursor = connection.cursor()
 
-	mydbg=dbg('info')
-	ilog=mydbg.info
-	elog=mydbg.error
-	wlog=mydbg.warn
+	#mydbg=dbg('info')
+	#ilog=mydbg.info
+	#elog=mydbg.error
+	#wlog=mydbg.warn
 
 
 class Library(DB):
@@ -27,7 +28,7 @@ class Library(DB):
 		self.cursor.execute('SELECT name FROM sqlite_master WHERE type=\'table\'')
 		result=self.cursor.fetchall()
 		if not ('library',) in result:
-			self.wlog('library table missing. Creating...')
+			CMP.warn('library table missing. Creating...')
 			self.cursor.execute(self.library_create)
 			self.connection.commit()
 		self.check_for_changes()
@@ -36,7 +37,7 @@ class Library(DB):
 	#check database for list of files and last modified date,
 	#	compare to all files in root directory (except lib).
 	#	if different, call update_library
-		self.ilog("looking for new tracks...")
+		CMP.info("looking for new tracks...")
 
 		#get all current files
 		filesongs=[]
@@ -76,11 +77,11 @@ class Library(DB):
 	def add_to_library(self,songfile):
 		mytagger = tagger()
 		tags = mytagger.get_track_info(songfile)
-		self.ilog("adding "+songfile)
+		CMP.warn("adding "+songfile)
 		self.cursor.execute(self.library_insert, ( songfile, tags['tracknum'], tags["title"], tags["artist"], tags["album"], tags['year'], str(os.path.getmtime(songfile)) ) )
 
 	def remove_from_library(self,songfile):
-		self.wlog("track "+songfile+" is missing. removing from database")
+		CMP.warn("track "+songfile+" is missing. removing from database")
 		self.cursor.execute('DELETE FROM library WHERE file =?',(songfile,))
 
 
@@ -135,7 +136,7 @@ class Config(DB):
 		self.cursor.execute('SELECT name FROM sqlite_master WHERE type=\'table\'')
 		result=self.cursor.fetchall()
 		if not ('config',) in result:
-			self.wlog('config table missing. Creating...')
+			CMP.warn('config table missing. Creating...')
 			self.initalize_config()
 		self.extract_settings()
 		

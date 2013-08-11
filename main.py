@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 #MAIN
+import CMP
 from CMP.database import Library, Config
 from CMP.lumberjack import dbg
 from CMP.player import Player
@@ -8,10 +9,10 @@ from CMP.playqueue import PlayQueue
 
 import time, os
 
-mydbg=dbg('info')
-ilog=mydbg.info
-elog=mydbg.error
-wlog=mydbg.warn
+CMP.DEBUGLEVEL=1
+
+#TODO if cmp.db doesn't exist, run setup
+
 
 #playqueue probably doesnt need to be a class. it can be a set of tracks (or just ids)
 
@@ -35,7 +36,7 @@ def play(song_id):
 			time.sleep(5)
 			print myplayer.playmode
 	else:
-		elog('No such song!')
+		CMP.error('No such song!')
 
 pc=PlayQueue()
 #for a in cmpdb.get_albums('Nekromantix'):
