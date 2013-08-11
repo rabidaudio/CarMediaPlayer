@@ -8,7 +8,6 @@ from player import cmpPlayer
 from playqueue import playQueue
 
 import time, os
-from input import cmpInput
 
 mydbg=dbg('info')
 ilog=mydbg.info
@@ -26,9 +25,10 @@ cmpdb = cmpLibrary(library_dir)
 cmpconfig = cmpConfig()
 print cmpconfig.settings
 
-myplayer = cmpPlayer()
+
 
 def play(song_id):
+	myplayer = cmpPlayer()
 	filepath=cmpdb.get_file(song_id)
 	if filepath != -1:
 		myplayer.start(filepath)
@@ -46,7 +46,9 @@ pc=playQueue()
 pc.add(333)
 pc.add(26)
 
+
 while not pc.isempty():
 	play(pc.get())
+	
 
 #myplayer.start('/home/charles/Dropbox/Projects/CarMediaPlayer/Test/new/jmu/ZMOO.mp3')

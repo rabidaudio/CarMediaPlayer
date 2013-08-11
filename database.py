@@ -146,6 +146,7 @@ class cmpConfig(cmpDB):
 	def initalize_config(self):
 		default_config=[('scrobble','True'),
 				('acceptable_filetypes','[".mp3"]'),
+				('gst_pipeline', 'default'),
 				]
 		self.cursor.execute('CREATE TABLE config (setting VARCHAR(50), value VARCHAR(50))')
 		self.cursor.executemany('INSERT INTO config VALUES (?,?)', default_config)

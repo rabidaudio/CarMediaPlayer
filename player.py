@@ -9,6 +9,7 @@ class cmpPlayer:
 #Music player class does the grunt work of producing audio using gstreamer
 # basically copied directly from the playbin tutorial. this is lazy, and
 # probably means it runs slower than neccessary, but it was stupid easy
+# TODO replace with a real stream that has controls (volume, play/pause, etc)
 	mydbg=dbg('info')
 	ilog=mydbg.info
 	elog=mydbg.error

@@ -3,6 +3,7 @@
 #LOG MANAGER
 import time
 
+#TODO Make functions, not class
 ##########
 # How to use:
 # import the class, make an instance, and then 
