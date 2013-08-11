@@ -5,18 +5,11 @@ import os, shutil, time, sys, re
 from tagger import tagger
 
 import CMP
-#from lumberjack import dbg
 
 class DB:
 ## This is the database manager
 	connection = sqlite.connect('cmp.db')
 	cursor = connection.cursor()
-
-	#mydbg=dbg('info')
-	#ilog=mydbg.info
-	#elog=mydbg.error
-	#wlog=mydbg.warn
-
 
 class Library(DB):
 	def __init__(self,library_dir):
