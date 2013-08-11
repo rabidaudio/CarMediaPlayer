@@ -3,9 +3,10 @@
 #MAIN
 import CMP
 from CMP.database import Library, Config
-from CMP.lumberjack import dbg
 from CMP.player import Player
 from CMP.playqueue import PlayQueue
+
+from CMP.player2 import Player2
 
 import time, os
 
@@ -47,8 +48,9 @@ pc.add(333)
 pc.add(26)
 
 
-while not pc.isempty():
-	play(pc.get())
-	
+#while not pc.isempty():
+#	play(pc.get())
+
+mp2=Player2()
 
 #myplayer.start('/home/charles/Dropbox/Projects/CarMediaPlayer/Test/new/jmu/ZMOO.mp3')
