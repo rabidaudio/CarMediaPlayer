@@ -5,6 +5,7 @@ from database import cmpLibrary, cmpConfig
 import database
 from lumberjack import dbg
 from player import cmpPlayer
+from playqueue import playQueue
 
 import time, os
 from input import cmpInput
@@ -32,22 +33,20 @@ def play(song_id):
 	if filepath != -1:
 		myplayer.start(filepath)
 		while myplayer.playmode:
-			time.sleep(1)
+			time.sleep(5)
+			print myplayer.playmode
 	else:
 		elog('No such song!')
 
-inp=cmpInput()
-inp.add(0)
-inp.add(1)
-inp.add(3)
-print inp.get()
-print inp.get()
-print inp.get()
-print inp.get()
-
+pc=playQueue()
 #for a in cmpdb.get_albums('Nekromantix'):
-#	print a
-#	for t in cmpdb.get_tracks(a):
-#		print a+'--'+t
+#	t=cmpdb.get_tracks(a)
+#	print t[0]
+#	pc.addm(t[1])
+pc.add(333)
+pc.add(26)
+
+while not pc.isempty():
+	play(pc.get())
 
 #myplayer.start('/home/charles/Dropbox/Projects/CarMediaPlayer/Test/new/jmu/ZMOO.mp3')

@@ -23,7 +23,7 @@ class cmpInput:
 		try:
 			r=self.q.pop()
 		except:
-			r=0
+			r=None
 		return r
 	def getall(self):
 		out=[]
@@ -31,4 +31,4 @@ class cmpInput:
 			out.append(self.q.pop())
 		return out
 	def clear(self):
-		q.clear()
+		self.q.clear()

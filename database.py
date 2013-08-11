@@ -106,18 +106,20 @@ class cmpLibrary(cmpDB):
 	
 	def get_tracks(self, album='', artist=''):
 		tracks=[]
+		song_ids=[]
 		if artist=='' and album=='':
-			self.cursor.execute('SELECT title FROM library ORDER BY title')
+			self.cursor.execute('SELECT title, song_id FROM library ORDER BY title')
 		elif artist=='':
-			self.cursor.execute('SELECT title FROM library WHERE album=? ORDER BY tracknum', (album,))
+			self.cursor.execute('SELECT title, song_id FROM library WHERE album=? ORDER BY tracknum', (album,))
 		elif album=='':
-			self.cursor.execute('SELECT title FROM library WHERE artist=? ORDER BY title', (artist,))
+			self.cursor.execute('SELECT title, song_id FROM library WHERE artist=? ORDER BY title', (artist,))
 		else:
-			self.cursor.execute('SELECT title FROM library WHERE artist=? AND album=? ORDER BY tracknum'(artist, album))
+			self.cursor.execute('SELECT title, song_id FROM library WHERE artist=? AND album=? ORDER BY tracknum'(artist, album))
 		results = self.cursor.fetchall()
 		for a in results:
 			tracks.append(a[0])
-		return tracks
+			song_ids.append(a[1])
+		return (tracks, song_ids)
 
 	def get_file(self, song_id):
 		self.cursor.execute('SELECT file FROM library WHERE song_id=?', (song_id,))
