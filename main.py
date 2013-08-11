@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
 #MAIN
-from database import cmpLibrary, cmpConfig
-import database
-from lumberjack import dbg
-from player import cmpPlayer
-from playqueue import playQueue
+from CMP.database import Library, Config
+from CMP.lumberjack import dbg
+from CMP.player import Player
+from CMP.playqueue import PlayQueue
 
 import time, os
 
@@ -21,14 +20,14 @@ print os.getcwd()
 library_dir = "lib"
 source_dir = "Test/new"
 
-cmpdb = cmpLibrary(library_dir)
-cmpconfig = cmpConfig()
+cmpdb = Library(library_dir)
+cmpconfig = Config()
 print cmpconfig.settings
 
 
 
 def play(song_id):
-	myplayer = cmpPlayer()
+	myplayer = Player()
 	filepath=cmpdb.get_file(song_id)
 	if filepath != -1:
 		myplayer.start(filepath)
@@ -38,7 +37,7 @@ def play(song_id):
 	else:
 		elog('No such song!')
 
-pc=playQueue()
+pc=PlayQueue()
 #for a in cmpdb.get_albums('Nekromantix'):
 #	t=cmpdb.get_tracks(a)
 #	print t[0]
