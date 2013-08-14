@@ -51,6 +51,6 @@ pc.add(26)
 #while not pc.isempty():
 #	play(pc.get())
 
-mp2=Player2()
+mp2=Player2(pc)
 
 #myplayer.start('/home/charles/Dropbox/Projects/CarMediaPlayer/Test/new/jmu/ZMOO.mp3')
