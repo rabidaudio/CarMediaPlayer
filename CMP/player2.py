@@ -30,7 +30,7 @@ import time
 class Player2:
 	def __init__(self, playqueue):
 		if str(playqueue.__class__) != "CMP.playqueue.PlayQueue":
-			raise Exception("that ain't no playqueue!")
+			CMP.error("that ain't no playqueue!")
 		else:
 			self.playqueue = playqueue
 		self.pipeline = gst.Pipeline('player')

@@ -25,6 +25,7 @@ def log(message, level='info'):
 def error(message):
 	if DEBUGLEVEL>=1:
 		log(message, 'error')
+		raise Exception(message) #this will cause the program to die, too
 def warn(message):
 	if DEBUGLEVEL>=2:
 		log(message, 'warn')
