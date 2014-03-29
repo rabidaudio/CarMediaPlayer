@@ -7,22 +7,14 @@ var serialport = require("serialport");
 var SerialPort = serialport.SerialPort;
 var find = require('find');
 
+var Playlist = require('./playlist');
 
-var player;
+
 
 var serialPort = new SerialPort(serial_dir, {
   baudrate: 57600,
   parser: serialport.parsers.readline("\n")
 }, true);
-
-serialPort.on('data', function(data){
-	console.log('data received:');
-	//console.log(data.length);
-	//console.log(data[0] == 1);
-	if(data[0]==1){
-		player = new 
-	}
-});
 
 
 
@@ -45,10 +37,19 @@ find.file(/\.mp3$/, library_dir, function(files){
 	}
 	console.log(files);
 
-	player = new Player(files.pop());
-	player.play();
+	var playlist = new Playlist(files);
 
 
+	serialPort.on('data', function(data){
+		console.log('data received:');
+		//console.log(data.length);
+		//console.log(data[0] == 1);
+		if(data[0]==1){
+			playlist.next();
+		}
+	});
+
+	playlist.play();
 	//setTimeout(check_status, 10000, player);
 	// create player instance
 	//var player = new Player('./Test/new/Amazon/The Cure/Seventeen Seconds/07 - A Forest.mp3');

@@ -4,12 +4,13 @@ var Player = require('./player');
 module.exports = function Playlist(file_array){
 	this.players = [];
 	this.files = file_array;
+	var that = this;
 	_.each(file_array,function(e,i,a){
-		this.players.push( new Player(e) );
+		that.players.push( new Player(e) );
 	});
 	this.now_playing = 0;
 	this.length = this.files.length;
-	
+
 	this.change = function(index){
 		this.players[this.now_playing].stop();
 		this.now_playing = index;
