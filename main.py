@@ -50,8 +50,8 @@ for a in cmpdb.get_albums('Colour Revolt'):
 
 #while not pc.isempty():
 #	print pc.get()
-#	play(pc.get())
+	play(pc.get())
 
-mp2=Player2(pc)
+#mp2=Player2(pc)
 
 #myplayer.start('/home/charles/Dropbox/Projects/CarMediaPlayer/Test/new/jmu/ZMOO.mp3')

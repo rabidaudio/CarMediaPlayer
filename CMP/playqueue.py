@@ -2,32 +2,34 @@
 
 #PLAY QUEUE
 
-from collections import deque
+#from collections import deque
+# WHY use dqueue!? arrays are fine
 
 class PlayQueue:
 #creates the current queue of files to play
 	def __init__(self):
-		self.q=deque()
+		self.q = []
 
 	def add(self, song_id):
-		self.q.appendleft(song_id)
+		self.q.append(song_id)
+
 	def get(self):
 		try:
-			r=self.q.pop()
+				r=self.q.pop(0)
 		except:
 			r=-1
 		return r
+
 	def getall(self):
-		out=[]
-		while len(self.q)>0:
-			out.append(self.q.pop())
+		out = self.q
+		self.clear()
 		return out
+
 	def clear(self):
-		self.q.clear()
-	def addm(self, songs): #add multiple
-		self.q.extendleft(songs)
+		self.q = []
+
+	def addm(self, songs):
+		self.q.extend(songs)
+		
 	def isempty(self):
-		if len(self.q)>0:
-			return False
-		else:
-			return True
+		return not len(self.q)>0

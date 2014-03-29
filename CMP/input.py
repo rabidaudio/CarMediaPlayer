@@ -1,6 +1,6 @@
 #!/usr/bin/var
 
-from collections import deque
+#from collections import deque
 
 class Input:
 #creates an input command queue
@@ -15,40 +15,38 @@ class Input:
 
 
 import serial
-import time
+import CMP
 
-#def readlineCR(port):
-#    rv = ""
-#    while True:
-#        ch = port.read()
-#        rv += ch
-#        if ch=='\r' or ch=='':
-#            return rv
-#
-#port = serial.Serial("/dev/ttyAMA0", baudrate=115200, timeout=3.0)
-#
-#while True:
-#    port.write("\r\nSay something:")
-#    rcv = readlineCR(port)
-#    port.write("\r\nYou sent:" + repr(rcv))
+out_commands = {
+	"READY": 0,
+	"PRINT": 1,
+	"SET": 	 2,
+
+}
+
+buttons = {
+	0: 'play_pause',
+	1: 'next',
+	2: 'prev',
+	3: 'menu',
+	4: 'mode',
+	5: 'shuffle_all',
+}
 
 
 	def __init__(self):
-		self.buttons=['play_pause','next','perv','menu','mode','shuffle_all']
-		self.q=deque()
+		self.serial = serial.Serial('/dev/ttyACM0', baudrate=115200, timeout=3.0)
 
-	def add(self, command):
-		self.q.appendleft(self.buttons[command])
+	def send(self, command, args=""):
+		self.serial.write(commands[command]+args)
+
 	def get(self):
-		try:
-			r=self.q.pop()
-		except:
-			r=None
-		return r
-	def getall(self):
-		out=[]
-		while len(self.q)>0:
-			out.append(self.q.pop())
-		return out
+		message = self.serial.readline()
+		if(message):
+			command = buttons[message[0]]
+			args = message[1:]
+			log("Recieved keypress "+command)
+			#run Control. method by command, args
+
 	def clear(self):
-		self.q.clear()
+		self.command_buffer=[]
