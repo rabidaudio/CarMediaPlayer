@@ -35,4 +35,13 @@ module.exports = function Playlist(file_array){
 	this.stop = function(){
 		this.players[this.now_playing].stop();
 	}
+
+	this.current = function(){
+		return this.players[this.now_playing];
+	}
+	this.on = function(event_name, callback){
+		_.each(this.players,function(e,i,a){
+			this.players.on(event_name, callback);
+		});
+	}
 }

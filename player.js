@@ -6,6 +6,7 @@ var lame = require('lame');
 var Speaker = require('speaker');
 var through = require('through');
 //var ps = require('pause-stream')();
+var events = require("events");
 
 module.exports = function P(file, callback){
 	if(!file) return;
@@ -35,6 +36,8 @@ module.exports = function P(file, callback){
 
 	this.id3 = new ID3(fs.readFileSync(file));
 	this.tags = this.id3.getTags();
+
+	this.prototype = events.EventEmitter;
 	
 	this.play = function(){
 		console.log("play called");
@@ -48,7 +51,8 @@ module.exports = function P(file, callback){
 			this.buffer.pipe(this.t).pipe(this.decoder).pipe(this.speaker);
 			this.playing = true;
 		}
-		return this.tags.TSOP.data+"\t"+this.tags.TIT2.data;
+		this.emit("play", this.tags);
+		//return this.tags.TSOP.data+"\t"+this.tags.TIT2.data;
 	};
 	this.stop = function(){
 		console.log("stop called");
@@ -59,7 +63,8 @@ module.exports = function P(file, callback){
 		//this.decoder.end();
 		//this.t.end();
 		//this.buffer.stop();
-		return true;
+		//return true;
+		this.emit("stop");
 	};
 	this.pause = function(){
 		console.log("pause called");
@@ -67,8 +72,11 @@ module.exports = function P(file, callback){
 		console.log("pausing...");
 		this.t.pause();
 		this.paused = true;
-		return true;
+		//return true;
+		this.emit("pause");
 	}
+
+
 }
 
 /*
