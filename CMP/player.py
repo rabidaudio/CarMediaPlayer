@@ -18,26 +18,29 @@ class Player:
 		bus = self.player.get_bus()
 		bus.add_signal_watch()
 		bus.connect("message", self.on_message)
+		self.playing = False
 
 	def on_message(self, bus, message):
 		t = message.type
 		if t == gst.MESSAGE_EOS:
 			CMP.info('End of song')
 			self.player.set_state(gst.STATE_NULL)
-			self.playmode = False
+			self.playing = False
 		elif t == gst.MESSAGE_ERROR:
 			self.player.set_state(gst.STATE_NULL)
 			err, debug = message.parse_error()
 			CMP.error("Error: %s" % err, debug)
-			self.playmode = False
+			self.playing = False
 
 	def stop(self):
 		self.player.set_state(gst.STATE_NULL)
-		self.playmode = False
+		self.playing = False
 
 	def start(self, filepath):
 		if os.path.isfile(filepath):
-			self.playmode = True
+			self.playing = True
 			self.player.set_property("uri", "file://" + filepath)
 			self.player.set_state(gst.STATE_PLAYING)
+		else:
+			print "no file"
 			

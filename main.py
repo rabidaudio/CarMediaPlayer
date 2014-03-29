@@ -40,17 +40,18 @@ def play(song_id):
 		CMP.error('No such song!')
 
 pc=PlayQueue()
-#for a in cmpdb.get_albums('Nekromantix'):
-#	t=cmpdb.get_tracks(a)
-#	print t[0]
-#	pc.addm(t[1])
-pc.add(333)
-pc.add(26)
+for a in cmpdb.get_albums('Colour Revolt'):
+	t=cmpdb.get_tracks(a)
+	print t[0]
+	pc.addm(t[1])
+#pc.add(333)
+#pc.add(26)
 
 
 #while not pc.isempty():
+#	print pc.get()
 #	play(pc.get())
 
-mp2=Player2('meow')
+mp2=Player2(pc)
 
 #myplayer.start('/home/charles/Dropbox/Projects/CarMediaPlayer/Test/new/jmu/ZMOO.mp3')

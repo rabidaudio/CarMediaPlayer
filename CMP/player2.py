@@ -26,17 +26,22 @@ import gst
 import CMP
 import time
 
+import thread
+#thread.start_new_thread(function, args[, kwargs])
+#Start a new thread and return its identifier. The thread executes the function function with the argument list args (which must be a tuple). The optional kwargs argument specifies a dictionary of keyword arguments. When the function returns, the thread silently exits. When the function terminates with an unhandled exception, a stack trace is printed and then the thread exits (but other threads continue to run).
+
 
 class Player2:
 	def __init__(self, playqueue):
 		if str(playqueue.__class__) != "CMP.playqueue.PlayQueue":
 			CMP.error("that ain't no playqueue!")
 		else:
-			self.playqueue = playqueue
+			self.playqueue = '' #playqueuefile
 		self.pipeline = gst.Pipeline('player')
 
 		self.filesrc = gst.element_factory_make('audiotestsrc', None)
 		self.pipeline.add(self.filesrc)
+		#set_property('location', '///')
 
 		#self.decodebin = gst.element_factory_make('decodebin', None)
 		#self.pipeline.add(self.decodebin)
@@ -51,6 +56,8 @@ class Player2:
 		#self.audioconvert.link(self.alsasink)
 
 		self.filesrc.link(self.alsasink)
+		# gst.element_link_many
+
 
 		self.play("n")
 		#freq=200
@@ -76,6 +83,11 @@ class Player2:
 			time.sleep(2)
 		self.pause()
 		
+#	def play(self, filepath):
+#		t = thread.start_new_thread(self._play, (filepath,))
+#		while t:
+#			print t
+#			time.sleep(2)
 
 	def play(self, filepath):
 		#1. check if already playing

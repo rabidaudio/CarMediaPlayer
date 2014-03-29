@@ -108,7 +108,7 @@ class Library(DB):
 		elif album=='':
 			self.cursor.execute('SELECT title, song_id FROM library WHERE artist=? ORDER BY title', (artist,))
 		else:
-			self.cursor.execute('SELECT title, song_id FROM library WHERE artist=? AND album=? ORDER BY tracknum'(artist, album))
+			self.cursor.execute('SELECT title, song_id FROM library WHERE artist=? AND album=? ORDER BY tracknum', (artist, album,))
 		results = self.cursor.fetchall()
 		for a in results:
 			tracks.append(a[0])

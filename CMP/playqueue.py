@@ -24,7 +24,7 @@ class PlayQueue:
 		return out
 	def clear(self):
 		self.q.clear()
-	def addm(self, songs):
+	def addm(self, songs): #add multiple
 		self.q.extendleft(songs)
 	def isempty(self):
 		if len(self.q)>0:
