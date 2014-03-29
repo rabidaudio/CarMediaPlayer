@@ -14,19 +14,19 @@ module.exports = function Playlist(file_array){
 	this.change = function(index){
 		this.players[this.now_playing].stop();
 		this.now_playing = index;
-		this.players[this.now_playing].play();
+		return this.players[this.now_playing].play();
 	}
 	this.next = function(){
 		if(this.now_playing == this.length) return false;
-		this.change(this.now_playing+1);
+		return this.change(this.now_playing+1);
 	}
 	this.prev = function(){
 		if(this.now_playing == 0) return false;
-		this.change(this.now_playing-1);
+		return this.change(this.now_playing-1);
 	}
 
 	this.play = function(){
-		this.players[this.now_playing].play();
+		return this.players[this.now_playing].play();
 	}
 	this.pause = function(){
 		this.players[this.now_playing].pause();

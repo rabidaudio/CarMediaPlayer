@@ -45,11 +45,11 @@ find.file(/\.mp3$/, library_dir, function(files){
 		//console.log(data.length);
 		//console.log(data[0] == 1);
 		if(data[0]==1){
-			playlist.next();
+			serialPort.write( playlist.next() );
 		}
 	});
 
-	playlist.play();
+	serialPort.write( playlist.play() );
 	//setTimeout(check_status, 10000, player);
 	// create player instance
 	//var player = new Player('./Test/new/Amazon/The Cure/Seventeen Seconds/07 - A Forest.mp3');

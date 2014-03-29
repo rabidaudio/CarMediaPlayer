@@ -32,6 +32,9 @@ module.exports = function P(file, callback){
 	this.playing = false;
 	this.paused = false;
 	this.seek_position = 0;
+
+	this.id3 = new ID3(fs.readFileSync(file));
+	this.tags = this.id3.getTags();
 	
 	this.play = function(){
 		console.log("play called");
@@ -45,13 +48,14 @@ module.exports = function P(file, callback){
 			this.buffer.pipe(this.t).pipe(this.decoder).pipe(this.speaker);
 			this.playing = true;
 		}
+		return this.tags.TSOP.data+"\t"+this.tags.TIT2.data;
 	};
 	this.stop = function(){
 		console.log("stop called");
 		if(!this.playing) return false;
 		console.log("stopping");
 		this.t.pause();
-		//this.speaker.end();
+		this.speaker.end();
 		//this.decoder.end();
 		//this.t.end();
 		//this.buffer.stop();
