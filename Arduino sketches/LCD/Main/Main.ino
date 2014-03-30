@@ -5,15 +5,16 @@
 #define REDLITE 15
 #define GREENLITE 14
 #define BLUELITE 12
+#define STATUSLITE 11
 
 #define POTPORT 8 //Analog 8 = D13
 
 #define NUMCOLORS 6
 #define LIGHTCYCLES 50//100
 
-#define PLAY_PAUSE 2
+#define PLAY_PAUSE 0
 #define NEXT 1
-#define PREV 0
+#define PREV 2
 #define MENU 3
 #define MODE 4
 #define SHUFFLE_ALL 5
@@ -47,7 +48,9 @@ void setup() {
   pinMode(REDLITE, OUTPUT);
   pinMode(GREENLITE, OUTPUT);
   pinMode(BLUELITE, OUTPUT);
+  pinMode(STATUSLITE, OUTPUT);
   
+  digitalWrite(STATUSLITE, HIGH);
 }
  
  
@@ -176,5 +179,6 @@ int getValue(){
 
 
 void sendKeypress(int key){
-  Serial.println(key);
+  Serial.print(key);
+  Serial.print("\n");
 }
