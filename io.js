@@ -17,16 +17,13 @@ var commandmap = {
 var serial_dir = "/dev/ttyACM0";
 //_.filter(fs.readdirSync('/dev'), function(device){ return device.match(/^ttyACM/); });
 
-function IO(callback){
+function IO(){
 	events.EventEmitter.call(this);
 	serialPort = new SerialPort(serial_dir, {
 	  baudrate: 57600,
 	  parser: serialport.parsers.readline("\n")
 	}, false);
 
-	this.on('next', function(){
-		console.log("internal next");
-	});
 	var that = this;
 	serialPort.open(function(err){
 		if(err) throw err;
@@ -38,7 +35,7 @@ function IO(callback){
 			//console.log(keymap[command]);
 			that.emit(keymap[data]);
 		});
-		callback();
+		//callback();
 	});
 	this.serialPort = serialPort;
 }
@@ -56,4 +53,4 @@ IO.prototype.send = function(command, message){
 }
 
 
-module.exports = IO; //new IO(serial_dir);
+module.exports = new IO();
