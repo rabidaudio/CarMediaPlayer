@@ -11,7 +11,6 @@ var keymap = {
 	'5': "shuffle_all",
 }
 var commandmap = {
-	'ready': 1,
 	'display': 0,
 }
 var serial_dir = "/dev/ttyACM0";
@@ -29,13 +28,8 @@ function IO(){
 		if(err) throw err;
 		serialPort.on('data', function(data){
 			console.log("data recvd");
-			//var command = data.toString().trim();
-			//var command = data.trim();
-			//console.log(command);
-			//console.log(keymap[command]);
 			that.emit(keymap[data]);
 		});
-		//callback();
 	});
 	this.serialPort = serialPort;
 }

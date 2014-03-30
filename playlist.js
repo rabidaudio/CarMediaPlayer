@@ -1,33 +1,43 @@
-var _ = require('underscore');
 var Player = require('./player');
 
 function Playlist(file_array){
 	this.players = [];
 	this.files = file_array;
 	var that = this;
-	_.each(file_array,function(e,i,a){
-		that.players.push( new Player(e) );
-	});
+	/*for(var i=0; i<file_array.length; i++){
+		that.players.push( new Player(file_array[i]) );
+	}*/
 	this.now_playing = 0;
+	this.create(file_array[this.now_playing]);
 	this.length = this.files.length;
 
-	this.players[0].on("pause", function(){
-		console.log("playlist pause");
-	});
+	this.event_list = {};
+}
+
+Playlist.prototype.create = function(){
+	var np = this.now_playing;
+	var p = new Player(this.files[np]);
+	//add any bound events to this new one
+	for(var event in this.event_list){
+		p.on(event, this.event_list[event]);
+	}
+	this.players[np] = p;
+	return p;
 }
 
 Playlist.prototype.change = function(index){
-	this.players[this.now_playing].stop();
+	this.current().stop();
 	this.now_playing = index;
-	return this.players[this.now_playing].play();
+	this.create();
+	return this.current().play();
 }
 Playlist.prototype.next = function(){
-	console.log("playlist next called");
+	console.log("playlist next called " + this.now_playing);
 	if(this.now_playing == this.length) return false;
 	return this.change(this.now_playing+1);
 }
 Playlist.prototype.prev = function(){
-	console.log("playlist prev called");
+	console.log("playlist prev called " + this.now_playing);
 	if(this.now_playing == 0) return false;
 	return this.change(this.now_playing-1);
 }
@@ -47,10 +57,13 @@ Playlist.prototype.current = function(){
 	return this.players[this.now_playing];
 }
 Playlist.prototype.on = function(event_name, callback){
-	/*_.each(this.players,function(e,i,a){
-		this.players[i].on(event_name, callback);
-	});*/
-	this.current().on(event_name, callback);
+	//add to event list
+	this.event_list[event_name] = callback;
+	//add to all existing players
+	for(var i=0; i<this.length; i++){
+		if(this.players[i])
+			this.players[i].on(event_name, callback);
+	}
 }
 
 module.exports = Playlist;

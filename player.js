@@ -8,7 +8,7 @@ var through = require('through');
 //var ps = require('pause-stream')();
 var events = require("events");
 
-function P(file, callback){
+function Player(file, callback){
 	if(!file) return;
 	this.file = file;
 	this.speaker = new Speaker({
@@ -39,15 +39,15 @@ function P(file, callback){
 	events.EventEmitter.call(this);
 }
 
-P.super_ = events.EventEmitter;
-P.prototype = Object.create(events.EventEmitter.prototype, {
+Player.super_ = events.EventEmitter;
+Player.prototype = Object.create(events.EventEmitter.prototype, {
     constructor: {
-        value: P,
+        value: Player,
         enumerable: false
     }
 });
 
-P.prototype.play = function(){
+Player.prototype.play = function(){
 	console.log("play called");
 	if(this.playing) return true;
 	if(this.paused){
@@ -62,7 +62,7 @@ P.prototype.play = function(){
 	this.emit("play", this.tags);
 	//return this.tags.TSOP.data+"\t"+this.tags.TIT2.data;
 }
-P.prototype.stop = function(){
+Player.prototype.stop = function(){
 	console.log("stop called");
 	if(!this.playing) return false;
 	console.log("stopping");
@@ -74,7 +74,7 @@ P.prototype.stop = function(){
 	//return true;
 	this.emit("stop");
 };
-P.prototype.pause = function(){
+Player.prototype.pause = function(){
 	console.log("pause called");
 	if(this.paused || !this.playing) return false;
 	console.log("pausing...");
@@ -84,4 +84,4 @@ P.prototype.pause = function(){
 	this.emit("pause");
 }
 
-module.exports = P;
+module.exports = Player;
