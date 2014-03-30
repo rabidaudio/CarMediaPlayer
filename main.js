@@ -4,7 +4,6 @@ var library_dir = './Test/new';
 
 var fs = require('fs');
 var find = require('find');
-var _ = require('underscore');
 
 var Playlist = require('./playlist');
 var io = require('./io');
@@ -30,9 +29,16 @@ find.file(/\.mp3$/, library_dir, function(files){
 	var next = playlist.next.bind(playlist);
 	var prev = playlist.prev.bind(playlist);
 	var pause = playlist.pause.bind(playlist);
+	var play = playlist.play.bind(playlist);
 
-	io.on('prev', prev);
-	io.on('next', next);
+	//io.on('prev', prev);
+	//io.on('next', next);
+	io.on('prev', pause);
+	io.on('next', play);
 
 	playlist.play();
 });
+
+
+//testing purposes
+require("repl").start();

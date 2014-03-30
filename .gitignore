@@ -1,9 +1,7 @@
+node_modules/
 
 #removing directories
-lib/
 Test/
-sqlitebrowser/
-old/
 
 #remove compiled verisons
 *.pyc
