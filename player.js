@@ -1,10 +1,11 @@
-
-var ID3 = require('id3');
 var fs = require('fs');
+var events = require("events");
+
 var lame = require('lame');
 var Speaker = require('speaker');
 var through = require('through');
-var events = require("events");
+
+var Tags = require('./tags');
 
 function create_speaker(){
 	return new Speaker({
@@ -27,7 +28,7 @@ function Player(file, seek_position){
 	var that = this;
 	this.t = through(function(data){
 		that.seek_position += data.length;
-		console.log(that.seek_position);
+		//console.log(that.seek_position);
 		this.queue(data);
 	}, function(){
 		that.emit("end");
@@ -38,8 +39,7 @@ function Player(file, seek_position){
 	this.paused = false;
 	this.seek_position = 0; //ms
 
-	this.id3 = new ID3(fs.readFileSync(file));
-	this.tags = this.id3.getTags();
+	this.tags = Tags(file); //TODO get from database instead
 	events.EventEmitter.call(this);
 }
 

@@ -24,8 +24,8 @@ find.file(/\.mp3$/, library_dir, function(files){
 
 	playlist = new Playlist(files);
 	playlist.on("play", function(tags){
-		console.log("Now playing " + tags.TIT2.data);
-		io.send('display', tags.TSOP.data + "\t" + tags.TIT2.data);
+		console.log("Now playing " + tags.title);
+		io.send('display', tags.artist + "\t" + tags.title + " - " + tags.album);
 	});
 
 	var next = playlist.next.bind(playlist);
