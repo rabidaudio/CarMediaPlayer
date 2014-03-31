@@ -4,6 +4,7 @@ var library_dir = './Test/new';
 
 var fs = require('fs');
 var find = require('find');
+var shuffle = require('shuffle-array');
 
 var Playlist = require('./playlist');
 var io = require('./io');
@@ -11,18 +12,19 @@ var io = require('./io');
 
 console.log("Setting up...");
 
-var playlist;
+//var playlist;
 
 
 find.file(/\.mp3$/, library_dir, function(files){
 
+	shuffle(files);
 	for(var i=0;i<files.length;i++){
 		files[i]=fs.realpathSync(files[i]);
 	}
 
 	playlist = new Playlist(files);
 	playlist.on("play", function(tags){
-		console.log("new play " + tags.TSOP.data);
+		console.log("Now playing " + tags.TIT2.data);
 		io.send('display', tags.TSOP.data + "\t" + tags.TIT2.data);
 	});
 
@@ -40,5 +42,7 @@ find.file(/\.mp3$/, library_dir, function(files){
 });
 
 
-//testing purposes
-require("repl").start();
+//testing purposes 
+require("repl").start({
+	useGlobal: true
+});

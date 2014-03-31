@@ -17,6 +17,8 @@ function Playlist(file_array){
 Playlist.prototype.create = function(){
 	var np = this.now_playing;
 	var p = new Player(this.files[np]);
+	var next = this.next.bind(this);
+	p.on('end', next);
 	//add any bound events to this new one
 	for(var event in this.event_list){
 		p.on(event, this.event_list[event]);
