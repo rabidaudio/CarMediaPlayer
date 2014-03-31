@@ -7,6 +7,8 @@ var through = require('through');
 
 var Tags = require('./tags');
 
+var time_interval = 50;
+
 function create_speaker(){
 	return new Speaker({
 	  channels: 2,          // 2 channels
@@ -15,15 +17,13 @@ function create_speaker(){
 	});
 }
 
-function Player(file, seek_position){
+function Player(file){
 	if(!file) return;
-	if(!seek_position) seek_position=0;
 	this.file = file;
 	this.speaker = create_speaker();
 	this.decoder = new lame.Decoder();
 
 	this.buffer = fs.createReadStream(file);
-	this.buffer.read(seek_position);
 
 	var that = this;
 	this.t = through(function(data){
@@ -37,7 +37,9 @@ function Player(file, seek_position){
 	
 	this.playing = false;
 	this.paused = false;
-	this.seek_position = 0; //ms
+	this.seek_position = 0; //bytes
+	this.time = 0; //ms
+	this.timer = undefined;
 
 	this.tags = Tags(file); //TODO get from database instead
 	events.EventEmitter.call(this);
@@ -56,28 +58,27 @@ Player.prototype.play = function(){
 	if(this.playing) return true;
 	if(this.paused){
 		this.decoder.pipe(this.speaker);
-		//this.t.resume();
+		this.timer = setInterval(this.time_step.bind(this), time_interval);
 		this.paused = false;
 		this.playing = true;
 	}else{
-		//this.buffer.pipe(this.decoder).pipe(this.speaker);
 		this.buffer.pipe(this.t).pipe(this.decoder).pipe(this.speaker);
+		this.timer = setInterval(this.time_step.bind(this), time_interval);
 		this.playing = true;
 	}
 	this.emit("play", this.tags);
-	//return this.tags.TSOP.data+"\t"+this.tags.TIT2.data;
 }
 Player.prototype.stop = function(){
 	if(!this.playing) return false;
-	//this.t.pause();
 	this.speaker.end();
+	clearInterval(this.timer);
 	this.emit("stop");
 };
 Player.prototype.pause = function(){
 	console.log("pause called");
 	if(this.paused || !this.playing) return false;
-	//this.t.pause();
 	this.speaker.end();
+	clearInterval(this.timer);
 	//make a new one so we can continue later
 	this.speaker = create_speaker();
 	this.paused = true;
@@ -85,8 +86,9 @@ Player.prototype.pause = function(){
 	this.emit("pause");
 }
 
-Player.prototype.seek_step = function(){
-	this.seek_position += 500;
+Player.prototype.time_step = function(){
+	this.time += time_interval;
+	console.log(this.time);
 }
 
 module.exports = Player;
