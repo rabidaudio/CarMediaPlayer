@@ -3,7 +3,7 @@ Car Media Player
 
 >Written by Charles Knight, <charles@rabidaudio.com>
 
-This is a simple ~Python~ Node.js music player taking inspiration
+This is a simple ~~Python~~ Node.js music player taking inspiration
 and occasionally hints from my favorite music player of all time, [Quod
 Libet](http://code.google.com/p/quodlibet/).
 
