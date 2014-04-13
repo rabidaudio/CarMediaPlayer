@@ -21,7 +21,8 @@ function Tags(file) {
     album       : nZ(tags.TALB, 'data')  || '',
     album_stort : nZ(tags.TSOA, 'data')  || nZ(tags.TALB, 'data') || '',
     title       : nZ(tags.TIT2, 'data')  || '',
-    track_num   : (nZ(tags.TRCK, 'data') || '0').match(/^[0-9]+/)[0],
+    track_num   : (nZ(tags.TRCK, 'data') || '0').match(/^[0-9]+/)[0] - 1,
+      //subtracting 1 not only coerces to Number but also 0-indexes
     year        : nZ(tags.TYER, 'data')  || '',
     genre       : (nZ(tags.TCON, 'data') || '').split(/\s?\/\s?/),
   };

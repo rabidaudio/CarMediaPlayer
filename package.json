@@ -12,7 +12,9 @@
     "lame": "^1.0.3",
     "shuffle-array": "0.0.0",
     "sqlite3": "^2.2.0",
-    "sql": "^0.37.0"
+    "sql": "^0.37.0",
+    "nosql": "^2.0.7",
+    "underscore": "^1.6.0"
   },
   "devDependencies": {},
   "scripts": {
