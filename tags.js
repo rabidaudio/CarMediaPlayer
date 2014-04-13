@@ -3,7 +3,12 @@ var fs  = require('fs');
 
 // https://www.npmjs.org/package/musicmetadata
 
-require('./hasProp');
+function nZ(item, property) {
+  if (item === undefined || !item.hasOwnProperty(property)) {
+    return undefined;
+  }
+  return item[property];
+}
 
 function Tags(file) {
   var id3  = new ID3(fs.readFileSync(file));
@@ -11,14 +16,14 @@ function Tags(file) {
   var data = {
     file        : file,
     raw_tags    : tags,
-    artist      : tags.TPE1.data  || '',
-    artist_sort : tags.TSOP.data  || tags.TPE1.data || '',
-    album       : tags.TALB.data  || '',
-    album_stort : tags.TSOA.data  || tags.TALB.data || '',
-    title       : tags.TIT2.data  || '',
-    track_num   : tags.TRCK.data.match(/^[0-9]+/)[0],
-    year        : tags.TYER.data  || '',
-    genre       : (tags.TCON.data || '').split(/\s?\/\s?/),
+    artist      : nZ(tags.TPE1, 'data')  || '',
+    artist_sort : nZ(tags.TSOP, 'data')  || nZ(tags.TPE1, 'data') || '',
+    album       : nZ(tags.TALB, 'data')  || '',
+    album_stort : nZ(tags.TSOA, 'data')  || nZ(tags.TALB, 'data') || '',
+    title       : nZ(tags.TIT2, 'data')  || '',
+    track_num   : (nZ(tags.TRCK, 'data') || '0').match(/^[0-9]+/)[0],
+    year        : nZ(tags.TYER, 'data')  || '',
+    genre       : (nZ(tags.TCON, 'data') || '').split(/\s?\/\s?/),
   };
   data.db_format = {
     $file        : file,
