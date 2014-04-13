@@ -2,12 +2,12 @@
 var library_dir = './Test/new';
 
 
-var fs = require('fs');
-var find = require('find');
-var shuffle = require('shuffle-array');
+var fs       = require('fs');
+var find     = require('find');
+var shuffle  = require('shuffle-array');
 
 var Playlist = require('./playlist');
-var io = require('./io');
+var io       = require('./io');
 
 
 console.log("Setting up...");

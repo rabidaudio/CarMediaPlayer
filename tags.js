@@ -6,22 +6,21 @@ var fs  = require('fs');
 require('./hasProp');
 
 function Tags(file) {
-  var id3 = new ID3(fs.readFileSync(file));
+  var id3  = new ID3(fs.readFileSync(file));
   var tags = id3.getTags();
   var data = {
     file        : file,
     raw_tags    : tags,
-    artist      : tags.TPE1.data || '',
-    artist_sort : tags.TSOP.data || tags.TPE1.data || '',
-    album       : tags.TALB.data || '',
-    album_stort : tags.TSOA.data || tags.TALB.data || '',
-    title       : tags.TIT2.data || '',
+    artist      : tags.TPE1.data  || '',
+    artist_sort : tags.TSOP.data  || tags.TPE1.data || '',
+    album       : tags.TALB.data  || '',
+    album_stort : tags.TSOA.data  || tags.TALB.data || '',
+    title       : tags.TIT2.data  || '',
     track_num   : tags.TRCK.data.match(/^[0-9]+/)[0],
-    year        : tags.TYER.data || '',
+    year        : tags.TYER.data  || '',
     genre       : (tags.TCON.data || '').split(/\s?\/\s?/),
   };
   data.db_format = {
-    //$id          : null,
     $file        : file,
     $kind        : "mp3",
     $artist      : data.artist,
@@ -35,21 +34,6 @@ function Tags(file) {
   };
   return data;
 }
-
-/*function db_format(){
-    return {
-        $file: this.file,
-        $kind: "mp3",
-        $artist: this.artist,
-        $artist_sort: this.artist_sort,
-        $album: this.album,
-        $album_stort:this.album_stort,
-        $title:this.title,
-        $track_num:this.track_num,
-        $year:this.year,
-        $genre:this.genre,
-    };
-}*/
 
 module.exports = Tags;
 

@@ -1,19 +1,18 @@
-var fs = require('fs');
-var events = require("events");
-
-var lame = require('lame');
+var fs      = require('fs');
+var events  = require("events");
+var lame    = require('lame');
 var Speaker = require('speaker');
 var through = require('through');
 
-var tags = require('./tags');
+var tags    = require('./tags');
 
 var time_interval = 50;
 
 function create_speaker() {
   return new Speaker({
-    channels: 2,          // 2 channels
-    bitDepth: 16,         // 16-bit samples
-    sampleRate: 44100     // 44,100 Hz sample rate
+    channels   : 2,     // 2 channels
+    bitDepth   : 16,    // 16-bit samples
+    sampleRate : 44100  // 44,100 Hz sample rate
   });
 }
 
@@ -35,11 +34,11 @@ function Player(file) {
     this.queue(null);
   });
 
-  this.playing = false;
-  this.paused = false;
+  this.playing       = false;
+  this.paused        = false;
   this.seek_position = 0; //bytes
-  this.time = 0; //ms
-  this.timer = undefined;
+  this.time          = 0; //ms
+  this.timer         = undefined;
 
   this.tags = tags(file); //TODO get from database instead
   events.EventEmitter.call(this);
@@ -48,8 +47,8 @@ function Player(file) {
 Player.super_ = events.EventEmitter;
 Player.prototype = Object.create(events.EventEmitter.prototype, {
   constructor: {
-    value: Player,
-    enumerable: false
+    value      : Player,
+    enumerable : false
   }
 });
 

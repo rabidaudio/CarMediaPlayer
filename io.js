@@ -5,12 +5,12 @@ var underscore = require('underscore');
 var fs         = require('fs');
 
 var keymap = {
-  '0': "play_pause",
-  '1': "next",
-  '2': "prev",
-  '3': "menu",
-  '4': "mode",
-  '5': "shuffle_all",
+  '0' : "play_pause",
+  '1' : "next",
+  '2' : "prev",
+  '3' : "menu",
+  '4' : "mode",
+  '5' : "shuffle_all",
 };
 var commandmap = {
   'display': 0,
@@ -18,7 +18,9 @@ var commandmap = {
 //var serial_dir = "/dev/ttyACM0";
 
 //is it elegant? no. functional? yes.
-var serial_dir = underscore.filter(fs.readdirSync('/dev'), function (device) { return device.match(/^ttyACM/); });
+var serial_dir = underscore.filter(fs.readdirSync('/dev'), function (device) {
+  return device.match(/^ttyACM/);
+});
 
 function IO() {
   events.EventEmitter.call(this);
