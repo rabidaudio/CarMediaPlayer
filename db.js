@@ -1,36 +1,53 @@
-var fs       = require('fs');
-var find     = require('find');
-// var mongoose = require('mongoose');
-var nosql    = require('nosql').load('test.nosql');
-var shuffle  = require('shuffle-array');
+var fs      = require('fs');
+var find    = require('find');
+var Nosql   = require('nosql');
+var shuffle = require('shuffle-array');
+var _       = require('underscore');
 
-var Tags     = require('./tags');
+var getTags = require('./tags');
 
-// var mongoUri    = 'mongodb://localhost/library';
 var library_dir = './Test/new';
+var db_file = 'test.nosql';
 
-// var songSchema = mongoose.Schema({
-//  file        : String,
-//  kind        : String,
-//  artist      : String,
-//  artist_sort : String,
-//  album       : String,
-//  album_sort  : String,
-//  title       : String,
-//  track_num   : Number,
-//  year        : Number,
-//  genre       : [String],
-// });
-// var Song = mongoose.model('Song', songSchema);
+function Library(directory, callback) {
+  var nosql = Nosql.load(db_file);
+  nosql.on('error', function (err) {
+    console.error(err);
+  });
+  nosql.clear();
 
-// mongoose.connect(mongoUri);
+  find.file(/\.mp3$/, directory, function (files) {
+    var tags = [];
+    var i;
+    for (i in files) {
+      tags.push(getTags(files[i]));
+    }
+    nosql.insert(tags, function () {
+      console.log("Library created.");
+      callback();
+    });
+  });
+  this.nosql = nosql;
+}
 
-// var db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'connection error:'));
-// db.once('open', function () {
-    // db.drop();
-find.file(/\.mp3$/, library_dir, function (files) {
+Library.prototype.get_artists = function (callback) {
+  this.nosql.all(function (doc) {
+    return doc;
+  }, function (results) {
+    var artists = _.chain(results)
+      .sortBy(function (e) {
+        return e.artist_sort;
+      })
+      .pluck('artist')
+      .uniq(true)
+      .value();
+    console.log(artists);
+    callback(artists);
+  });
+};
 
-    //module.exports = new Library(library_dir);
+var debug = new Library(library_dir, function(){
+  debug.get_artists(function(a){console.log(a);});
 });
-// });
+
+// module.exports = new Library(library_dir);
