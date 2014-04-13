@@ -26,18 +26,6 @@ function Tags(file) {
     year        : nZ(tags.TYER, 'data')  || '',
     genre       : (nZ(tags.TCON, 'data') || '').split(/\s?\/\s?/),
   };
-  // data.db_format = {
-  //   $file        : file,
-  //   $kind        : "mp3",
-  //   $artist      : data.artist,
-  //   $artist_sort : data.artist_sort,
-  //   $album       : data.album,
-  //   $album_stort : data.album_stort,
-  //   $title       : data.title,
-  //   $track_num   : data.track_num,
-  //   $year        : data.year,
-  //   $genre       : data.genre,
-  // };
   return data;
 }
 

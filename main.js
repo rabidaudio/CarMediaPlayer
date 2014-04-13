@@ -4,10 +4,9 @@ var library_dir = './Test/new';
 
 var fs       = require('fs');
 var find     = require('find');
-var shuffle  = require('shuffle-array');
 
-var Playlist = require('./playlist');
 var io       = require('./io');
+var Library  = require("./db.js");
 
 
 console.log("Setting up...");
@@ -15,15 +14,10 @@ console.log("Setting up...");
 //var playlist;
 
 function main(io) {
-  find.file(/\.mp3$/, library_dir, function (files) {
-    var next, prev, pause, play, i;
-
-    shuffle(files);
-    for (i = 0; i < files.length; i++) {
-      files[i] = fs.realpathSync(files[i]);
-    }
-
-    var playlist = new Playlist(files);
+  Library.get_tracks(function(tracks){
+    var next, prev, pause, play;
+    var playlist = Library.make_playlist(tracks);
+    
     playlist.on("play", function (tags) {
       console.log("Now playing " + tags.title);
       io.send('display', tags.artist + "\t" + tags.title + " - " + tags.album);
@@ -40,10 +34,12 @@ function main(io) {
     //io.on('next', play);
 
     playlist.play();
-  });
+  }, 'Seventeen Seconds');
 }
 
-io.open(main);
+Library.init(library_dir, function () {
+  io.open(main);
+});
 
 //testing purposes 
 require("repl").start({

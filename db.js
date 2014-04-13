@@ -1,13 +1,13 @@
-var fs      = require('fs');
-var find    = require('find');
-var Nosql   = require('nosql');
-var shuffle = require('shuffle-array');
-var _       = require('underscore');
+var fs       = require('fs');
+var find     = require('find');
+var Nosql    = require('nosql');
+var shuffle  = require('shuffle-array');
+var _        = require('underscore');
 
-var getTags = require('./tags');
+var getTags  = require('./tags');
+var Playlist = require('./playlist');
 
-var library_dir = './Test/new';
-var db_file     = 'library.nosql';
+var db_file     = 'library.db';
 
 var Library = {};
 
@@ -79,15 +79,20 @@ Library.get_tracks = function (callback, album, artist) {
       .sortBy(function (e) {
         return e.track_num;
       })
-      .map(function (e) {
+/*      .map(function (e) {
         return {
           id: e.id,
           title: e.title
         };
-      })
+      })*/
       .value();
     callback(albums);
   });
+};
+
+Library.make_playlist = function (tracks) {
+  var files = _.pluck(tracks, 'file');
+  return new Playlist(files);
 };
 
 /*Library.init(library_dir, function(){
