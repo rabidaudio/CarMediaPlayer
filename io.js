@@ -56,12 +56,15 @@ IO.prototype.open = function (cb) {
       that.open(cb);
     } else {
       that.serialPort.on('data', function (data) {
-        console.log("data recvd");
         that.emit(keymap[data]);
       });
       cb(that);
     }
   });
 };
+
+IO.prototype.clear = function () {
+  this.send('display', ' '); //TODO find a better way than sending a space. hacks.
+}
 
 module.exports = new IO(); //sneaky singleton awesomeness

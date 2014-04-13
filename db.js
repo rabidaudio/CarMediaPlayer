@@ -7,7 +7,7 @@ var _        = require('underscore');
 var getTags  = require('./tags');
 var Playlist = require('./playlist');
 
-var db_file     = 'library.db';
+var db_file     = 'library.nosql';
 
 var Library = {};
 

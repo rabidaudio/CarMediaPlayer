@@ -17,11 +17,12 @@ function main(io) {
   Library.get_tracks(function(tracks){
     var next, prev, pause, play;
     var playlist = Library.make_playlist(tracks);
-    
+
     playlist.on("play", function (tags) {
       console.log("Now playing " + tags.title);
       io.send('display', tags.artist + "\t" + tags.title + " - " + tags.album);
     });
+    playlist.on('stop', io.clear.bind(io));
 
     next  = playlist.next.bind(playlist);
     prev  = playlist.prev.bind(playlist);

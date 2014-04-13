@@ -35,13 +35,15 @@ Playlist.prototype.change = function (index) {
   return this.current().play();
 };
 Playlist.prototype.next = function () {
-  console.log("playlist next called " + this.now_playing);
-  if (this.now_playing === this.length) { return false; }
+  if (this.now_playing === this.length - 1) {
+    return this.current().stop();
+  }
   return this.change(this.now_playing + 1);
 };
 Playlist.prototype.prev = function () {
-  console.log("playlist prev called " + this.now_playing);
-  if (this.now_playing === 0) { return false; }
+  if (this.now_playing === 0) {
+    return this.change(this.now_playing);
+  }
   return this.change(this.now_playing - 1);
 };
 

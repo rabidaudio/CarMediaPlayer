@@ -53,7 +53,6 @@ Player.prototype = Object.create(events.EventEmitter.prototype, {
 });
 
 Player.prototype.play = function () {
-  console.log("play called");
   if (this.playing) { return true; }
   if (this.paused) {
     this.decoder.pipe(this.speaker);
