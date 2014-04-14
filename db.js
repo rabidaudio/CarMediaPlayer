@@ -37,14 +37,19 @@ Library.get_artists = function (callback) {
   Library.nosql.all(function (doc) {
     return doc;
   }, function (results) {
+    var tracks;
     var artists = _.chain(results)
       .sortBy(function (e) {
-        return e.artist_sort;
+        //clever clever! http://stackoverflow.com/questions/16426774/underscore-sortby-based-on-multiple-attributes
+        return [e.artist_sort, e.year, e.album_sort, e.track_num].join("_");
+      })
+      .tap(function (a) {
+        tracks = a;
       })
       .pluck('artist')
       .uniq(true)
       .value();
-    callback(artists);
+    callback(artists, tracks);
   });
 };
 
@@ -56,37 +61,38 @@ Library.get_albums = function (callback, artist) {
       return doc;
     }
   }, function (results) {
+    var tracks;
     var albums = _.chain(results)
       .sortBy(function (e) {
-        return e.album_sort;
+        return [e.artist_sort, e.year, e.album_sort, e.track_num].join("_");
+      })
+      .tap(function (a) {
+        tracks = a;
       })
       .pluck('album')
       .uniq(true)
       .value();
-    callback(albums);
+    callback(albums, tracks);
   });
 };
 
 Library.get_tracks = function (callback, album, artist) {
-  //if (!artist) { artist = /.*/; }
-  //if (!album) { album = /.*/; }
   Library.nosql.all(function (doc) {
     if (doc.artist.match(artist) && doc.album.match(album)) {
       return doc;
     }
   }, function (results) {
-    var albums = _.chain(results)
+    var tracks;
+    var songs = _.chain(results)
       .sortBy(function (e) {
-        return e.track_num;
+        return [e.artist_sort, e.year, e.album_sort, e.track_num].join("_");
       })
-/*      .map(function (e) {
-        return {
-          id: e.id,
-          title: e.title
-        };
-      })*/
+      .tap(function (a) {
+        tracks = a;
+      })
+      .pluck('title')
       .value();
-    callback(albums);
+    callback(songs, tracks);
   });
 };
 

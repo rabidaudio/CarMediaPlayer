@@ -58,6 +58,10 @@ Playlist.prototype.stop = function () {
   this.current().stop();
 };
 
+Playlist.prototype.play_pause = function () {
+  this.current.play_pause();
+};
+
 Playlist.prototype.current = function () {
   return this.players[this.now_playing];
 };

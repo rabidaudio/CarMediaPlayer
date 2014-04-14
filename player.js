@@ -84,6 +84,14 @@ Player.prototype.pause = function () {
   this.emit("pause");
 };
 
+Player.prototype.play_pause = function() {
+  if (this.paused || !this.playing) {
+    this.play();
+  } else {
+    this.pause();
+  }
+};
+
 Player.prototype.time_step = function () {
   this.time += time_interval;
   //console.log(this.time);

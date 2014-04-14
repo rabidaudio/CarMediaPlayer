@@ -65,6 +65,6 @@ IO.prototype.open = function (cb) {
 
 IO.prototype.clear = function () {
   this.send('display', ' '); //TODO find a better way than sending a space. hacks.
-}
+};
 
 module.exports = new IO(); //sneaky singleton awesomeness

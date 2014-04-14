@@ -8,13 +8,12 @@ var find     = require('find');
 var io       = require('./io');
 var Library  = require("./db.js");
 
-
 console.log("Setting up...");
 
 //var playlist;
 
 function main(io) {
-  Library.get_tracks(function(tracks){
+  Library.get_tracks(function(list, tracks){
     var next, prev, pause, play;
     var playlist = Library.make_playlist(tracks);
 
@@ -33,6 +32,7 @@ function main(io) {
     io.on('next', next);
     //io.on('prev', pause);
     //io.on('next', play);
+    io.on()
 
     playlist.play();
   }, 'Seventeen Seconds');
