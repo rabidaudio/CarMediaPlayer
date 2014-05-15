@@ -6,7 +6,7 @@ var fs       = require('fs');
 var find     = require('find');
 
 var io       = require('./io');
-var Library  = require("./db.js");
+var Library  = require("./db");
 
 console.log("Setting up...");
 
