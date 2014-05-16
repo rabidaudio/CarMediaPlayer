@@ -30,7 +30,7 @@ function IO() {
     throw "No serial devices found.";
   }
   var serialPort = new SerialPort("/dev/" + serial_dir.shift(), {
-    baudrate: 57600,
+    baudrate: 9600,
     parser: serialport.parsers.readline("\n")
   }, false);
   this.serialPort = serialPort;
@@ -45,7 +45,7 @@ IO.prototype = Object.create(events.EventEmitter.prototype, {
 });
 
 IO.prototype.send = function (command, message) {
-  this.serialPort.write(commandmap[command]+message);
+  this.serialPort.write(commandmap[command] + message);
 };
 
 IO.prototype.open = function (cb) {
