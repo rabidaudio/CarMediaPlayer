@@ -17,6 +17,17 @@ Library.nosql.on('error', function (err) {
 });
 Library.nosql.clear();
 
+
+function track_sort(track) {
+  return [
+    track.artist_sort,
+    track.year,
+    track.album_sort,
+    track.track_num
+  ].join("_");
+}
+
+
 //TODO don't reload the entire library at every boot
 Library.init = function (directory, callback) {
   find.file(/\.mp3$/, directory, function (files) {
@@ -43,7 +54,7 @@ Library.get_artists = function (callback) {
     var artists = _.chain(results)
       .sortBy(function (e) {
         //clever clever! http://stackoverflow.com/questions/16426774/underscore-sortby-based-on-multiple-attributes
-        return [e.artist_sort, e.year, e.album_sort, e.track_num].join("_");
+        return track_sort(e);
       })
       .tap(function (a) {
         tracks = a;
@@ -66,7 +77,7 @@ Library.get_albums = function (callback, artist) {
     var tracks;
     var albums = _.chain(results)
       .sortBy(function (e) {
-        return [e.artist_sort, e.year, e.album_sort, e.track_num].join("_");
+        return track_sort(e);
       })
       .tap(function (a) {
         tracks = a;
@@ -87,7 +98,7 @@ Library.get_tracks = function (callback, album, artist) {
     var tracks;
     var songs = _.chain(results)
       .sortBy(function (e) {
-        return [e.artist_sort, e.year, e.album_sort, e.track_num].join("_");
+        return track_sort(e);
       })
       .tap(function (a) {
         tracks = a;
