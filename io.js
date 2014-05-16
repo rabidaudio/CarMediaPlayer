@@ -37,7 +37,7 @@ function IO() {
   }
   var serialPort = new SerialPort("/dev/" + serial_dir.shift(), {
     baudrate: 9600,
-    parser: serialport.parsers.readline("\n")
+    parser: serialport.parsers.readline("\r\n")
   }, false);
   this.serialPort = serialPort;
 }
@@ -64,8 +64,6 @@ IO.prototype.open = function (cb) {
       next.open(cb);
     } else {
       self.serialPort.on('data', function (data) {
-        console.log(new Buffer(data));
-        data = data[0]; //data includes a null or newline character, not sure what 
         self.emit(keymap[data]);
       });
       cb(self);
