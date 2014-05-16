@@ -20,6 +20,12 @@ var commandmap = {
 //var serial_dir = "/dev/ttyACM0";
 
 //is it elegant? no. functional? yes.
+// Basically, it gets a list of all the devices that look like they could
+//  be USB serial devices. Then it goes through the list, trying to connect
+//  to it. If a connection is not established, it replaces itself with
+//  a new instance for the next item in the list. This continues until the
+//  list runs out or a connection is estabished, at which point it calls the
+//  callback with itself.
 var serial_dir = underscore.filter(fs.readdirSync('/dev'), function (device) {
   return device.match(/^ttyACM/);
 });
@@ -58,6 +64,7 @@ IO.prototype.open = function (cb) {
       next.open(cb);
     } else {
       self.serialPort.on('data', function (data) {
+        console.log(new Buffer(data));
         data = data[0]; //data includes a null or newline character, not sure what 
         self.emit(keymap[data]);
       });
