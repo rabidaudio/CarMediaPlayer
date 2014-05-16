@@ -17,25 +17,31 @@ function main(io) {
     var playlist = Library.make_playlist(tracks);
 
     playlist.on("play", function (tags) {
+      //TODO some gui module should control display formatting
       console.log("Now playing " + tags.title);
       io.send('display', tags.artist + "\t" + tags.title + " - " + tags.album);
     });
     playlist.on('stop', io.clear.bind(io));
 
-    next  = playlist.next.bind(playlist);
-    prev  = playlist.prev.bind(playlist);
-    pause = playlist.pause.bind(playlist);
-    play  = playlist.play.bind(playlist);
+    next       = playlist.next.bind(playlist);
+    prev       = playlist.prev.bind(playlist);
+    play_pause = playlist.play_pause.bind(playlist);
+    play       = playlist.play.bind(playlist);
 
     io.on('prev', prev);
     io.on('next', next);
-    // io.on()
+    io.on('play_pause', play_pause);
+    //I'm sure there is a better way to abstract this, but it looks
+    //  elegant in spite of it's verbosity, so we can keep it for now
 
     playlist.play();
   }, 'Seventeen Seconds');
 }
 
+//Initalize library
 Library.init(library_dir, function () {
+  //When library is ready, connect to IO device
+  //  and start main function
   io.open(main);
 });
 

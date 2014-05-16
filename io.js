@@ -1,7 +1,7 @@
 var serialport = require("serialport");
 var SerialPort = serialport.SerialPort;
 var events     = require("events");
-var underscore = require('underscore');
+var _          = require('underscore');
 var fs         = require('fs');
 
 var keymap = [
@@ -26,7 +26,7 @@ var commandmap = {
 //  a new instance for the next item in the list. This continues until the
 //  list runs out or a connection is estabished, at which point it calls the
 //  callback with itself.
-var serial_dir = underscore.filter(fs.readdirSync('/dev'), function (device) {
+var serial_dir = _.filter(fs.readdirSync('/dev'), function (device) {
   return device.match(/^ttyACM/);
 });
 
@@ -54,6 +54,8 @@ IO.prototype.send = function (command, message) {
   this.serialPort.write(commandmap[command] + message);
 };
 
+/* Since we don't know if the chosen serial device will work,
+  we have to do this here rather than in the constructor. */
 IO.prototype.open = function (cb) {
   var self = this;
   this.serialPort.open(function (err) {
