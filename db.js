@@ -17,15 +17,17 @@ Library.nosql.on('error', function (err) {
 });
 Library.nosql.clear();
 
+//TODO don't reload the entire library at every boot
 Library.init = function (directory, callback) {
   find.file(/\.mp3$/, directory, function (files) {
     var tags = [];
-    var i, t;
-    for (i in files) {
-      t = getTags(files[i]);
+    var t;
+    _.forEach(files, function (e, i) {
+      t = getTags(e);
       t.id = i;
       tags.push(t);
-    }
+    });
+
     Library.nosql.insert(tags, function () {
       console.log("Library created.");
       callback();
