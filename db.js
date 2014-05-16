@@ -19,6 +19,7 @@ Library.nosql.clear();
 
 
 function track_sort(track) {
+//clever clever! http://stackoverflow.com/questions/16426774/underscore-sortby-based-on-multiple-attributes
   return [
     track.artist_sort,
     track.year,
@@ -52,10 +53,7 @@ Library.get_artists = function (callback) {
   }, function (results) {
     var tracks;
     var artists = _.chain(results)
-      .sortBy(function (e) {
-        //clever clever! http://stackoverflow.com/questions/16426774/underscore-sortby-based-on-multiple-attributes
-        return track_sort(e);
-      })
+      .sortBy(track_sort)
       .tap(function (a) {
         tracks = a;
       })
@@ -76,9 +74,7 @@ Library.get_albums = function (callback, artist) {
   }, function (results) {
     var tracks;
     var albums = _.chain(results)
-      .sortBy(function (e) {
-        return track_sort(e);
-      })
+      .sortBy(track_sort)
       .tap(function (a) {
         tracks = a;
       })
@@ -97,9 +93,7 @@ Library.get_tracks = function (callback, album, artist) {
   }, function (results) {
     var tracks;
     var songs = _.chain(results)
-      .sortBy(function (e) {
-        return track_sort(e);
-      })
+      .sortBy(track_sort)
       .tap(function (a) {
         tracks = a;
       })
