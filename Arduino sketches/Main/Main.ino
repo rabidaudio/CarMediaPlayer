@@ -11,12 +11,18 @@
 #define NUMCOLORS 6
 #define LIGHTCYCLES 50//100
 
+//Outgoing commands
 #define PLAY_PAUSE 2
 #define NEXT 1
 #define PREV 0
 #define MENU 3
 #define MODE 4
 #define SHUFFLE_ALL 5
+
+//Incoming commands
+#define DISPLAY 48 //ASCII 0
+#define CLEAR_DISPLAY 49 //ASCII 1
+  //TODO add color commands, etc
 
 // initialize the library with the numbers of the interface pins
 LiquidCrystal lcd(21, 20, 19, 18, 17, 16);
@@ -52,20 +58,21 @@ void setup() {
  
  
 void loop() {
+  
+  //Handle input
   if(Serial.available()){
-    delay(100);
-    lcd.clear();
-    while (Serial.available() > 0) {
-      //start by getting any messages and pushing them to the display
-      char c = Serial.read();
-      if(c == '\t'){
-        lcd.setCursor(0, 1);
-      }else if(c != '\n'){
-        lcd.write(c);
-        Serial.write('a');
-      }
+    delay(50);
+    char command = Serial.read();
+    switch(command){
+      case DISPLAY:
+        writeToScreen();
+        break;
+      case CLEAR_DISPLAY:
+        lcd.clear();
     }
   }
+  
+  //handle output
   char pot = checkPot();
   if(pot>0){
     sendKeypress(NEXT);
@@ -77,6 +84,19 @@ void loop() {
   delay(50);
 }
  
+ 
+void writeToScreen(){
+  lcd.clear();
+  while (Serial.available() > 0) {
+    //start by getting any messages and pushing them to the display
+    char c = Serial.read();
+    if(c == '\t'){
+      lcd.setCursor(0, 1);
+    }else if(c != '\n'){
+      lcd.write(c);
+    }
+  }
+}
  
 /*
   for (int i = 0; i < 255; i++) {

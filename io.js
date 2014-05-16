@@ -15,6 +15,7 @@ var keymap = [
 
 var commandmap = {
   'display': 0,
+  'clear_display': 1
 };
 //var serial_dir = "/dev/ttyACM0";
 
@@ -42,9 +43,9 @@ IO.prototype = Object.create(events.EventEmitter.prototype, {
     enumerable: false
   }
 });
+
 IO.prototype.send = function (command, message) {
-  //this.serialPort.write(commandmap[command]+message);
-  this.serialPort.write(message);
+  this.serialPort.write(commandmap[command]+message);
 };
 
 IO.prototype.open = function (cb) {
@@ -66,7 +67,7 @@ IO.prototype.open = function (cb) {
 };
 
 IO.prototype.clear = function () {
-  this.send('display', ' '); //TODO find a better way than sending a space. hacks.
+  this.send('clear_display');
 };
 
 module.exports = new IO(); //sneaky singleton awesomeness
