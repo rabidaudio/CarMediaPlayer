@@ -4,14 +4,15 @@ var events     = require("events");
 var underscore = require('underscore');
 var fs         = require('fs');
 
-var keymap = {
-  '0' : "play_pause",
-  '1' : "next",
-  '2' : "prev",
-  '3' : "menu",
-  '4' : "mode",
-  '5' : "shuffle_all",
-};
+var keymap = [
+  "prev",
+  "next",
+  "play_pause",
+  "menu",
+  "mode",
+  "shuffle_all",
+];
+
 var commandmap = {
   'display': 0,
 };
@@ -47,18 +48,19 @@ IO.prototype.send = function (command, message) {
 };
 
 IO.prototype.open = function (cb) {
-  var that = this;
+  var self = this;
   this.serialPort.open(function (err) {
     if (err) {
       console.log(err);
       console.log("trying next device...");
-      that = new IO(); //try the next found device
-      that.open(cb);
+      var next = new IO(); //try the next found device
+      next.open(cb);
     } else {
-      that.serialPort.on('data', function (data) {
-        that.emit(keymap[data]);
+      self.serialPort.on('data', function (data) {
+        data = data[0]; //data includes a null or newline character, not sure what 
+        self.emit(keymap[data]);
       });
-      cb(that);
+      cb(self);
     }
   });
 };

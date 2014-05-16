@@ -10,10 +10,9 @@ var Library  = require("./db");
 
 console.log("Setting up...");
 
-//var playlist;
 
 function main(io) {
-  Library.get_tracks(function(list, tracks){
+  Library.get_tracks(function (list, tracks) {
     var next, prev, pause, play;
     var playlist = Library.make_playlist(tracks);
 
@@ -30,9 +29,7 @@ function main(io) {
 
     io.on('prev', prev);
     io.on('next', next);
-    //io.on('prev', pause);
-    //io.on('next', play);
-    io.on()
+    // io.on()
 
     playlist.play();
   }, 'Seventeen Seconds');
