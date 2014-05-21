@@ -8,13 +8,13 @@ function Playlist(file_array) {
     that.players.push( new Player(file_array[i]) );
   }*/
   this.now_playing = 0;
-  this.create_player(file_array[this.now_playing]);
+  this.create(file_array[this.now_playing]);
   this.length = this.files.length;
 
   this.event_list = {};
 }
 
-Playlist.prototype.create_player = function () {
+Playlist.prototype.create = function () {
   var np = this.now_playing;
   var p = new Player(this.files[np]);
   var next = this.next.bind(this);
@@ -31,7 +31,7 @@ Playlist.prototype.create_player = function () {
 Playlist.prototype.change = function (index) {
   this.current().stop();
   this.now_playing = index;
-  this.create_player();
+  this.create();
   return this.current().play();
 };
 Playlist.prototype.next = function () {
