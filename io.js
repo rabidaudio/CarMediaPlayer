@@ -73,8 +73,14 @@ IO.prototype.open = function (cb) {
   });
 };
 
+// Wrappers for some commands
 IO.prototype.clear = function () {
   this.send('clear_display');
 };
+
+IO.prototype.display = function (message) {
+  this.send('display', message);
+}
+
 
 module.exports = new IO(); //sneaky singleton awesomeness
