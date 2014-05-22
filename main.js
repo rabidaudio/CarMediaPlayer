@@ -5,7 +5,7 @@ var library_dir = './Test/new';
 var fs       = require('fs');
 var find     = require('find');
 
-var io       = require('./io');
+var io       = require('./dummy_io');//require('./io');
 var Library  = require("./db");
 
 console.log("Setting up...");
@@ -13,7 +13,7 @@ console.log("Setting up...");
 
 function main(io) {
   Library.get_tracks(function (list, tracks) {
-    var next, prev, pause, play;
+    var next, prev, pause, play, play_pause;
     var playlist = Library.make_playlist(tracks);
 
     playlist.on("play", function (tags) {
@@ -30,7 +30,8 @@ function main(io) {
 
     io.on('prev', prev);
     io.on('next', next);
-    io.on('play_pause', play_pause);
+    // io.on('play_pause', play_pause);
+
     //I'm sure there is a better way to abstract this, but it looks
     //  elegant in spite of it's verbosity, so we can keep it for now
 
@@ -46,6 +47,6 @@ Library.init(library_dir, function () {
 });
 
 //testing purposes 
-require("repl").start({
-  useGlobal: true
-});
+// require("repl").start({
+//   useGlobal: true
+// });
