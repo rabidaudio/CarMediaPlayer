@@ -39,7 +39,7 @@ function Player(file) {
     this.queue(null);
   });
 
-  //inital state
+  //initial state
   this._set_state('unstarted');
 
   this.tags = tags(file); //TODO get from database instead
@@ -47,7 +47,7 @@ function Player(file) {
   events.EventEmitter.call(this);
 }
 
-// Normal event object code
+// Normal code to handle implementing events on object
 Player.super_ = events.EventEmitter;
 Player.prototype = Object.create(events.EventEmitter.prototype, {
   constructor: {
